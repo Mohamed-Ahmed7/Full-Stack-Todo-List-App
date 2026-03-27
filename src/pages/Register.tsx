@@ -1,8 +1,10 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import InputErrorMessage from "../components/InputErrorMessage";
 import { REGISTER_FORM } from "../data";
+import { registerSchema } from "../validation";
 
 interface IFormInput {
   username: string;
@@ -16,7 +18,7 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<IFormInput>({resolver:yupResolver(registerSchema)});
   // ** Handlers
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
   // **  Renders
@@ -38,7 +40,7 @@ const RegisterPage = () => {
       <h2 className="mb-4 text-3xl font-semibold text-center">
         Register to get access!
       </h2>
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         {/* <div>
           <Input
             placeholder="Username"
