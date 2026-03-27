@@ -5,6 +5,9 @@ import Input from "../components/ui/Input";
 import InputErrorMessage from "../components/InputErrorMessage";
 import { REGISTER_FORM } from "../data";
 import { registerSchema } from "../validation";
+import axiosInstance from "../config/axios.config";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 interface IFormInput {
   username: string;
@@ -13,14 +16,38 @@ interface IFormInput {
 }
 
 const RegisterPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   // ** React Hook Form
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>({resolver:yupResolver(registerSchema)});
+  } = useForm<IFormInput>({ resolver: yupResolver(registerSchema) });
   // ** Handlers
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    setIsLoading(true);
+    try {
+      const { status } = await axiosInstance.post("/auth/local/register", data);
+      if (status === 200) {
+        toast.success(
+          "You will navigate to the login page after 2 seconds to login.",
+          {
+            position: "bottom-center",
+            duration: 4000,
+            style: {
+              backgroundColor: "black",
+              color: "white",
+              width: "fit-content",
+            },
+          },
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   // **  Renders
   const renderRegisterForm = REGISTER_FORM.map(
     ({ name, placeholder, type, validation }, idx) => (
@@ -34,7 +61,7 @@ const RegisterPage = () => {
       </div>
     ),
   );
-  console.log(errors);
+
   return (
     <div className="max-w-md mx-auto">
       <h2 className="mb-4 text-3xl font-semibold text-center">
@@ -87,7 +114,7 @@ const RegisterPage = () => {
           )}
         </div> */}
         {renderRegisterForm}
-        <Button fullWidth>Register</Button>
+        <Button fullWidth isLoading={isLoading}>Register</Button>
       </form>
     </div>
   );
