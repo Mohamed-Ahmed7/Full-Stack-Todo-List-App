@@ -8,6 +8,8 @@ import { registerSchema } from "../validation";
 import axiosInstance from "../config/axios.config";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { AxiosError } from "axios";
+import type { IErrorResponse } from "../interfaces";
 
 interface IFormInput {
   username: string;
@@ -32,7 +34,7 @@ const RegisterPage = () => {
         toast.success(
           "You will navigate to the login page after 2 seconds to login.",
           {
-            position: "bottom-center",
+            position: "bottom-right",
             duration: 4000,
             style: {
               backgroundColor: "black",
@@ -43,7 +45,16 @@ const RegisterPage = () => {
         );
       }
     } catch (error) {
-      console.log(error);
+      const errorObj = error as AxiosError<IErrorResponse>;
+      toast.error(`${errorObj.response?.data?.error?.message}`, {
+        position: "bottom-right",
+        duration: 2000,
+        style: {
+          backgroundColor: "black",
+          color: "white",
+          width: "fit-content",
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -114,7 +125,9 @@ const RegisterPage = () => {
           )}
         </div> */}
         {renderRegisterForm}
-        <Button fullWidth isLoading={isLoading}>Register</Button>
+        <Button fullWidth isLoading={isLoading}>
+          Register
+        </Button>
       </form>
     </div>
   );
