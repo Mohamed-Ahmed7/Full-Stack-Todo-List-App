@@ -2,4 +2,7 @@
 @utility container {
   margin-inline: auto;
 }
-@custom-variant dark (&:where(.dark, .dark *));
+/* @custom-variant dark (&:where(.dark, .dark *)); */
+.active {
+  color: #4f46e5;
+}

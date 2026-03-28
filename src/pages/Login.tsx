@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { AxiosError } from "axios";
 import type { IErrorResponse } from "../interfaces";
+import { useNavigate } from "react-router";
 
 interface IFormInput {
   identifier: string;
@@ -17,7 +18,9 @@ interface IFormInput {
 }
 
 const LoginPage = () => {
+  // ** Hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   // ** React Hook Form
   const {
     register,
@@ -28,23 +31,30 @@ const LoginPage = () => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
     try {
-      const { status } = await axiosInstance.post("/auth/local", data);
+      const { status, data: resData } = await axiosInstance.post(
+        "/auth/local",
+        data,
+      );
       if (status === 200) {
         toast.success("You will navigate to the Home page after 2 seconds.", {
           position: "bottom-right",
-          duration: 4000,
+          duration: 1500,
           style: {
             backgroundColor: "black",
             color: "white",
             width: "fit-content",
           },
         });
+        localStorage.setItem("loggedInUser", JSON.stringify(resData));
+        setTimeout(() => {
+          location.replace("/");
+        }, 2000);
       }
     } catch (error) {
       const errorObj = error as AxiosError<IErrorResponse>;
       toast.error(`${errorObj.response?.data?.error?.message}`, {
         position: "bottom-right",
-        duration: 2000,
+        duration: 1500,
         style: {
           backgroundColor: "black",
           color: "white",

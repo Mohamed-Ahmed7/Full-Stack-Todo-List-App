@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { AxiosError } from "axios";
 import type { IErrorResponse } from "../interfaces";
-
+import { useNavigate } from "react-router";
 interface IFormInput {
   username: string;
   email: string;
@@ -18,7 +18,9 @@ interface IFormInput {
 }
 
 const RegisterPage = () => {
+  // ** Hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   // ** React Hook Form
   const {
     register,
@@ -35,7 +37,7 @@ const RegisterPage = () => {
           "You will navigate to the login page after 2 seconds to login.",
           {
             position: "bottom-right",
-            duration: 4000,
+            duration: 1500,
             style: {
               backgroundColor: "black",
               color: "white",
@@ -43,12 +45,15 @@ const RegisterPage = () => {
             },
           },
         );
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
     } catch (error) {
       const errorObj = error as AxiosError<IErrorResponse>;
       toast.error(`${errorObj.response?.data?.error?.message}`, {
         position: "bottom-right",
-        duration: 2000,
+        duration: 1500,
         style: {
           backgroundColor: "black",
           color: "white",

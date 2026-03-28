@@ -9,16 +9,27 @@ import RootLayout from "../pages/Layout";
 import HomePage from "../pages";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import PageNotFound from "../pages/PageNotFound";
-let isLoggedIn = false;
+import ProfilePage from "../pages/Profile";
+import ErrorHandler from "../components/errors/ErrorHandler";
+const userDataString = localStorage.getItem("loggedInUser");
+const userData = userDataString ? JSON.parse(userDataString) : null;
 const routes = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<RootLayout />}>
+      <Route path="/" element={<RootLayout />} errorElement={<ErrorHandler />}>
         <Route
           index
           element={
-            <ProtectedRoute isAllowed={isLoggedIn} redirectPath="/login">
+            <ProtectedRoute isAllowed={userData?.jwt} redirectPath="/login">
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="profile"
+          element={
+            <ProtectedRoute isAllowed={userData?.jwt} redirectPath="/login">
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
@@ -26,7 +37,7 @@ const routes = createBrowserRouter(
         <Route
           path="login"
           element={
-            <ProtectedRoute isAllowed={!isLoggedIn} redirectPath="/">
+            <ProtectedRoute isAllowed={!userData?.jwt} redirectPath="/">
               <LoginPage />
             </ProtectedRoute>
           }
@@ -34,7 +45,7 @@ const routes = createBrowserRouter(
         <Route
           path="register"
           element={
-            <ProtectedRoute isAllowed={!isLoggedIn} redirectPath="/login">
+            <ProtectedRoute isAllowed={!userData?.jwt} redirectPath="/login">
               <RegisterPage />
             </ProtectedRoute>
           }
