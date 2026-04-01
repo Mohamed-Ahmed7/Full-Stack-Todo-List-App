@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { AxiosError } from "axios";
 import type { IErrorResponse } from "../interfaces";
-import { useNavigate } from "react-router";
 
 interface IFormInput {
   identifier: string;
@@ -20,7 +19,6 @@ interface IFormInput {
 const LoginPage = () => {
   // ** Hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
   // ** React Hook Form
   const {
     register,

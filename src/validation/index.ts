@@ -28,3 +28,15 @@ export const loginSchema = yup
       .min(6, "Password should be at-least 6 characters."),
   })
   .required();
+export const todoSchema = yup
+  .object({
+    title: yup
+      .string()
+      .required("Title is required.")
+      .min(5, "Title should be at-least 5 characters."),
+    description: yup
+      .string()
+      .required("Description is required.")
+      .min(12, "Description should be at-least 12 characters."),
+  })
+  .required();
