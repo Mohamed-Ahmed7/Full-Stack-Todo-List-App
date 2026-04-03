@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 const App = () => {
   return (
     <main>
-      <RouterProvider router={routes} />;
+      <RouterProvider router={routes} />
       <Toaster />
     </main>
   );

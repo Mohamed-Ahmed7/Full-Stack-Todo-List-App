@@ -35,4 +35,5 @@ export interface ITodo {
   documentId?: string;
   title: string;
   description: string;
+  completed?:boolean
 }
