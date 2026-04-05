@@ -1,6 +1,6 @@
 import Button from "./ui/Button";
 
-import type { ITodo } from "../interfaces";
+import type { IErrorResponse, ITodo } from "../interfaces";
 import useCustomQuery from "../hooks/useCustomQuery";
 import Modal from "./ui/Modal";
 import { useState } from "react";
@@ -13,7 +13,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import InputErrorMessage from "../components/InputErrorMessage";
 import { todoSchema } from "../validation";
 import TodoSkeleton from "./TodoSkeleton";
-import { todos } from "../data";
+import { faker } from "@faker-js/faker";
 
 const TodoList = () => {
   const emptyTodo: ITodo = {
@@ -178,6 +178,28 @@ const TodoList = () => {
       setIsRemove(false);
     }
   };
+  const onGenerateTodos = async () => {
+    for (let i = 0; i < 100; i++) {
+      try {
+        const { data } = await axiosInstance.post(
+          `/todos`,
+          {
+            data: {
+              title: faker.word.words(4),
+              description: faker.lorem.paragraph(2),
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.jwt}`,
+            },
+          },
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   if (isLoading)
     return (
       <div className="space-y-1">
@@ -190,9 +212,21 @@ const TodoList = () => {
   return (
     <div className="space-y-1 px-4">
       <div className="w-fit mx-auto my-10">
-        <Button size={"sm"} onClick={openAddModal}>
-          Post new todo
-        </Button>
+        {isLoading ? (
+          <div className="flex items-center gap-x-2 animate-pulse">
+            <div className="h-9 bg-gray-300 rounded-md dark:bg-gray-200 w-32 "></div>
+            <div className="h-9 bg-gray-300 rounded-md dark:bg-gray-200 w-32 "></div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-x-2">
+            <Button size={"sm"} onClick={openAddModal}>
+              Post new todo
+            </Button>
+            <Button size={"sm"} variant={"outline"} onClick={onGenerateTodos}>
+              Generate todos
+            </Button>
+          </div>
+        )}
       </div>
       {data.todos.length ? (
         data.todos.map((todo: ITodo, idx: number) => (
