@@ -11,6 +11,7 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import PageNotFound from "../pages/PageNotFound";
 import ProfilePage from "../pages/Profile";
 import ErrorHandler from "../components/errors/ErrorHandler";
+import TodosPage from "../pages/Todos";
 const userDataString = localStorage.getItem("loggedInUser");
 const userData = userDataString ? JSON.parse(userDataString) : null;
 const routes = createBrowserRouter(
@@ -30,6 +31,14 @@ const routes = createBrowserRouter(
           element={
             <ProtectedRoute isAllowed={userData?.jwt} redirectPath="/login">
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="todos"
+          element={
+            <ProtectedRoute isAllowed={userData?.jwt} redirectPath="/login">
+              <TodosPage />
             </ProtectedRoute>
           }
         />

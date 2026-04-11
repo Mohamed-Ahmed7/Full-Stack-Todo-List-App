@@ -196,7 +196,7 @@ const TodoList = () => {
           },
         );
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
   };
@@ -211,7 +211,7 @@ const TodoList = () => {
   if (error) return "An error has occurred: " + error.message;
   return (
     <div className="space-y-1 px-4">
-      <div className="w-fit mx-auto my-10">
+      <div className="w-fit mx-auto my-10 ">
         {isLoading ? (
           <div className="flex items-center gap-x-2 animate-pulse">
             <div className="h-9 bg-gray-300 rounded-md dark:bg-gray-200 w-32 "></div>
